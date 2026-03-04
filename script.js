@@ -31,14 +31,23 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('scroll', reveal);
     reveal(); // Run on load
 
-    // Smooth scroll for nav links
+    // Smooth scroll for nav links with offset for fixed navbar
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
+            const targetId = this.getAttribute('href');
+            if (targetId === '#') return;
+            
+            const target = document.querySelector(targetId);
             if (target) {
+                const offset = 80;
+                const bodyRect = document.body.getBoundingClientRect().top;
+                const elementRect = target.getBoundingClientRect().top;
+                const elementPosition = elementRect - bodyRect;
+                const offsetPosition = elementPosition - offset;
+
                 window.scrollTo({
-                    top: target.offsetTop - 70,
+                    top: offsetPosition,
                     behavior: 'smooth'
                 });
             }
@@ -49,11 +58,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const navbar = document.querySelector('.navbar');
     window.addEventListener('scroll', () => {
         if (window.scrollY > 50) {
-            navbar.style.padding = '10px 0';
+            navbar.style.padding = '8px 0';
             navbar.style.backgroundColor = 'rgba(255, 255, 255, 0.98)';
+            navbar.style.boxShadow = '0 10px 15px -3px rgba(0,0,0,0.1)';
         } else {
             navbar.style.padding = '15px 0';
             navbar.style.backgroundColor = 'rgba(255, 255, 255, 0.95)';
+            navbar.style.boxShadow = 'none';
         }
     });
 });
